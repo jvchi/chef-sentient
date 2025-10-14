@@ -116,3 +116,17 @@ ul{
   align-items: flex-start;
   flex-direction: column-reverse;
 }
+.delete{
+  color: rgb(255, 21, 21);
+  font-size: .7rem;
+  opacity: 0;
+  margin-left: 3px;
+  transition: .2s ease-out .2s;
+  align-items: center;
+}
+li{
+  cursor: pointer;
+}
+li:hover .delete{
+  opacity: 1;
+}
