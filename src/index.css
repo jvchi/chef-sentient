@@ -5,8 +5,11 @@
 
 @layer base{
   *{
-    @apply text-neutral-900 
+    @apply text-neutral-900 w-full 
 
+  }
+  body{
+    @apply min-h-screen bg-neutral-100 font-[inter]
   }
 
   input,
