@@ -9,7 +9,7 @@
 
   }
   body{
-    @apply min-h-screen bg-neutral-100 font-[inter]
+    @apply min-h-screen bg-neutral-100 font-[inter] 
   }
 
   input,
