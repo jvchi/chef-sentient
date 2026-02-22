@@ -7,7 +7,7 @@ export default function Main(){
 
   const [isIngredients, setIsIngredient] = useState([])
   const list = isIngredients.map((ingredient) =>{
-    return <li key={ingredient} className='text-[14px] sm:text-[16px] font-light list-disc mx-4'>{ingredient}</li>
+    return <li key={ingredient} className='text-[14px] sm:text-[16px] font-light list-disc mx-4 text-[#475467]'>{ingredient}</li>
   })
 
   function signUp(formData){
@@ -42,7 +42,7 @@ export default function Main(){
         <div className='flex flew-row justify-center items-center bg-[#F0EFEB] h-[100px] max-w-[500px] my-8 px-4'>
           <div className='w-[300px] h-[52px] flex flex-col items-center justify-center'>
             <h4 className='text-[13px] sm:text-[16px] font-medium'>Ready for a recipe?</h4>
-            <p className='text-[10px] sm:text-[13] font-light text-[#6B7280]'>Generate a recipe from your list of ingredients.</p>
+            <p className='text-[8px] sm:text-[12px] font-light text-[#6B7280]'>Generate a recipe from your list of ingredients.</p>
           </div>
           <Button variant='secondary'>Get a recipe</Button>
         </div>
