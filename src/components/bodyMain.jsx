@@ -8,9 +8,7 @@ import IngredientsList from './ingredientsList'
 export default function Main(){
 
   const [isIngredients, setIsIngredient] = useState([])
-  const list = isIngredients.map((ingredient) =>{
-    return <li key={ingredient} className='text-[14px] sm:text-[16px] font-light list-disc mx-8 text-[#475467]'>{ingredient}</li>
-  })
+  
 
   function signUp(formData){
     const newIngredient = formData.get('ingredient')
@@ -41,7 +39,7 @@ export default function Main(){
         </form>
       </main>
 
-      {isIngredients.length ? <IngredientsList isIngredients={isIngredients} list={list} showRecipe={showRecipe}/> : null}
+      {isIngredients.length ? <IngredientsList isIngredients={isIngredients} showRecipe={showRecipe}/> : null}
       { recipeShown && <Recipe/>}
     </>
   )
