@@ -1,19 +1,42 @@
-import { HfInference } from "@huggingface/inference"
-
-const SYSTEM_PROMPT = `
-You are an AI assistant that is a proffessional Chef. you go by the name Chef Jed. You receive a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but do not include too many extra ingredients especially if the users ingredients are limited. make the meal realistic and something a person could actually make. Format your response in markdown to make it easier to render to a web page. do not add emojis to the response
-`
-
-const hf = new HfInference(import.meta.env.VITE_HF_ACCESS_TOKEN)
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '' // Empty string for relative path on Vercel
 
 export async function getRecipeFromMistral(ingredientsArr) {
-  const ingredientsString = ingredientsArr.join(", ")
-  return hf.chatCompletionStream({
-    model: "mistralai/Mistral-7B-Instruct-v0.2",
-    messages: [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: `I have ${ingredientsString}. Please give me a recipe you'd recommend I make!` },
-    ],
-    max_tokens: 1024,
-  })
+  const response = await fetch(`${BACKEND_URL}/api/recipe`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ingredients: ingredientsArr })
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch recipe from Chef Jed server.');
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  // Return an async iterable to maintain compatibility with existing frontend logic
+  return {
+    async *[Symbol.asyncIterator]() {
+      let buffer = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n\n');
+        buffer = lines.pop(); // Keep the last partial line in the buffer
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              yield data;
+            } catch (e) {
+              console.error('Error parsing SSE data:', e);
+            }
+          }
+        }
+      }
+    }
+  };
 }

@@ -40,7 +40,7 @@ export default function Main() {
   return (
     <>
       <main className="pt-14 sm:pt-24">
-        <form action={signUp} className="flex mx-auto grow border-neutral-200 [&>*]:p-2  [&>*]:rounded-2xl rounded-2xl max-h-[45px] items-stretch max-w-[800px] select-none">
+        <form action={signUp} className="flex mx-auto grow border-neutral-200 [&>*]:p-2  [&>*]:rounded-2xl rounded-[5px] min-h-[45px] items-stretch max-w-[800px] select-none">
 
           <input type="text"
             name='ingredient'
