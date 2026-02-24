@@ -8,7 +8,7 @@ import { getRecipeFromMistral } from '../ai'
 
 export default function Main() {
 
-  const [isIngredients, setIsIngredient] = useState(['beans', 'yam', 'plantain', 'rice'])
+  const [isIngredients, setIsIngredient] = useState([])
   const [recipeShown, setShowRecipe] = useState(false);
   const [recipe, setRecipe] = useState('')
   const [isActive, setIsActive] = useState(false)
