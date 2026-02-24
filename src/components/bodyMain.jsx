@@ -37,7 +37,7 @@ export default function Main() {
             name='ingredient'
             aria-label="add ingredients"
             placeholder="e.g garri..."
-            className=" placeholder-neutral-200 mx-2 flex-1 focus:shadow-inner shadow-neutral-200 outline-2 outline-neutral-300 transition-all duration-200 bg-neutral-50 text-[12px] sm:text-[16px]"
+            className=" placeholder-neutral-200 mx-2 flex-1 shadow-[0px_0px_5px_rgba(0,0,0,0.5)] ring-black/5 ring shadow-neutral-200 focus:outline-2 outline-black/5  transition-all duration-100 bg-neutral-50 text-[12px] sm:text-[16px]"
           />
 
           <Button type="submit">Add Ingredient</Button>
