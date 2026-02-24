@@ -9,7 +9,7 @@ export default function ingredientsList(props) {
   return (
 
     <section className=' max-w-[800px] flex flex-col justify-around mx-auto  grow h-max'>
-      <h1 className='text-[14px] font-medium my-4 sm:text-[18px] px-4 sm:px-2'>Ingredients on hand:</h1>
+      <h1 className='text-[14px] text-neutral-600 font-medium my-4 sm:text-[18px] px-4 sm:px-2'>Ingredients on hand:</h1>
 
       <ul className="">
         {list}
