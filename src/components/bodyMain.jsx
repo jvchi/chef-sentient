@@ -13,13 +13,22 @@ export default function Main() {
   const [recipe, setRecipe] = useState('')
 
   async function showRecipe() {
+    setRecipe('')
+    setShowRecipe(true);
     console.log('loading recipe...')
 
-    const generatedRecipe = await getRecipeFromMistral(isIngredients)
-    setShowRecipe(true)
-    setRecipe(generatedRecipe)
-
-    console.log(generatedRecipe)
+    try {
+      const stream = await getRecipeFromMistral(isIngredients)
+      for await (const chunk of stream) {
+        if (chunk.choices && chunk.choices[0].delta.content) {
+          const newText = chunk.choices[0].delta.content
+          setRecipe(prev => prev + newText)
+        }
+      }
+    } catch (err) {
+      console.error(err)
+        ("Sorry, Chef Jed is currently cooking. Please try again later.")
+    }
   }
 
   function signUp(formData) {
