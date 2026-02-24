@@ -8,14 +8,16 @@ import { getRecipeFromMistral } from '../ai'
 
 export default function Main() {
 
-  const [isIngredients, setIsIngredient] = useState([])
+  const [isIngredients, setIsIngredient] = useState(['beans', 'yam', 'plantain', 'rice'])
   const [recipeShown, setShowRecipe] = useState(false);
   const [recipe, setRecipe] = useState('')
   const [isActive, setIsActive] = useState(false)
+  const [recipeStatus, setRecipeStatus] = useState('idle')
 
   async function showRecipe() {
     setRecipe('')
     setShowRecipe(true);
+    setRecipeStatus('loading');
     let hasStartedStreaming = false;
 
     try {
@@ -27,10 +29,15 @@ export default function Main() {
           setRecipe(prev => prev + newText)
         }
       }
+      setRecipeStatus('done');
     } catch (err) {
       console.error(err);
       if (!hasStartedStreaming) {
         setRecipe("Sorry, Chef Jed is currently cooking. Please try again later.");
+        setRecipeStatus('idle');
+      } else {
+        // We got content, so mark as done even if stream errored at the end
+        setRecipeStatus('done');
       }
     }
   }
@@ -63,7 +70,7 @@ export default function Main() {
         </form>
       </main>
 
-      {isIngredients.length ? <IngredientsList isIngredients={isIngredients} showRecipe={showRecipe} /> : null}
+      {isIngredients.length ? <IngredientsList isIngredients={isIngredients} showRecipe={showRecipe} recipeStatus={recipeStatus} /> : null}
       {recipeShown && <Recipe recipe={recipe} />}
     </>
   )

@@ -1,10 +1,13 @@
 import Button from "./Button"
 
 export default function ingredientsList(props) {
+  const { recipeStatus } = props;
 
   const list = props.isIngredients.map((ingredient) => {
     return <li key={ingredient} className='text-[14px] sm:text-[16px] font-light list-disc mx-8 text-[#475467]'>{ingredient}</li>
   })
+
+  const buttonVariant = recipeStatus === 'done' ? 'success' : 'secondary';
 
   return (
 
@@ -20,7 +23,26 @@ export default function ingredientsList(props) {
           <h4 className='text-[13px] sm:text-[16px] font-medium'>Ready for a recipe?</h4>
           <p className='text-[8px] sm:text-[12px] font-light text-[#6B7280]'>Generate a recipe from your list of ingredients.</p>
         </div>
-        <Button variant='secondary' onClick={props.showRecipe}>Get a recipe</Button>
+        <Button
+          variant={buttonVariant}
+          onClick={props.showRecipe}
+          disabled={recipeStatus === 'loading'}
+          className="recipe-btn"
+        >
+          <span className="recipe-btn-inner ">
+            <span className={`recipe-btn-state ${recipeStatus === 'idle' ? 'active' : ''} text-neutral-50`}>
+              Get a recipe
+            </span>
+            <span className={`recipe-btn-state ${recipeStatus === 'loading' ? 'active' : ''}`}>
+              <span className="recipe-spinner"></span>
+            </span>
+            <span className={`recipe-btn-state ${recipeStatus === 'done' ? 'active' : ''}`}>
+              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7.5L5.5 11L12 3" stroke="#86EFAC" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </span>
+        </Button>
       </div>}
     </section>
   )
