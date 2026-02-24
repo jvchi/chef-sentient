@@ -2,24 +2,24 @@ import { useState } from 'react'
 import Button from './Button'
 import Recipe from './Recipe'
 import IngredientsList from './ingredientsList'
+import { getRecipeFromGemini } from '../ai'
 
 
 
 export default function Main(){
 
-  const [isIngredients, setIsIngredient] = useState([])
+  const [isIngredients, setIsIngredient] = useState(['beans', 'rice', 'spices', 'indomie'])
+  const [recipeShown, setShowRecipe] = useState(false);
+  const [recipe, setRecipe] = useState('')
   
+  async function showRecipe(){
+    const generatedRecipe = await getRecipeFromGemini(isIngredients)
+    console.log(generatedRecipe)
+  }
 
   function signUp(formData){
     const newIngredient = formData.get('ingredient')
     {newIngredient.length && setIsIngredient(prevIngredients => [...prevIngredients, newIngredient])}
-  }
-
-  const [recipeShown, setShowRecipe] = useState(false);
-
-  function showRecipe(){
-    setShowRecipe(prevRecipe => !prevRecipe)
-    console.log('beans')
   }
 
 
