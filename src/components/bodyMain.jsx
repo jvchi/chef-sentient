@@ -45,11 +45,11 @@ export default function Main() {
 
   return (
     <>
-      <main className="pt-14 sm:pt-24">
+      <main className={`transition-all duration-700 ${isActive || isIngredients.length > 0 ? 'pt-14 sm:pt-24' : 'pt-0'}`}>
         <form
           onFocus={() => setIsActive(true)}
           action={signUp}
-          className={`flex mx-auto grow border-neutral-200 [&>*]:p-2 [&>*]:rounded-full rounded-full min-h-[38px] items-stretch max-w-[800px] select-none transition-all duration-700 ease-in-out ${isActive || isIngredients.length > 0 ? 'translate-y-0' : 'translate-y-64 sm:translate-y-80'}`}
+          className={`flex mx-auto grow border-neutral-200 [&>*]:p-2 [&>*]:rounded-full rounded-full min-h-[38px] items-stretch max-w-[800px] select-none transition-all duration-700 ease-in-out ${isActive || isIngredients.length > 0 ? 'translate-y-0' : 'translate-y-[35vh] sm:translate-y-[40vh]'}`}
         >
 
           <input type="text"
