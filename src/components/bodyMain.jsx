@@ -13,7 +13,12 @@ export default function Main() {
   const [recipe, setRecipe] = useState('')
 
   async function showRecipe() {
+    console.log('loading recipe...')
+    
     const generatedRecipe = await getRecipeFromMistral(isIngredients)
+    setShowRecipe(true)
+    setRecipe(generatedRecipe)
+    
     console.log(generatedRecipe)
   }
 
@@ -40,7 +45,7 @@ export default function Main() {
       </main>
 
       {isIngredients.length ? <IngredientsList isIngredients={isIngredients} showRecipe={showRecipe} /> : null}
-      {recipeShown && <Recipe />}
+      {recipeShown && <Recipe  recipe={recipe}/> }
     </>
   )
 }
