@@ -31,13 +31,13 @@ export default function Main() {
   return (
     <>
       <main className="pt-14 sm:pt-24">
-        <form action={signUp} className="flex mx-auto grow border-neutral-200 [&>*]:p-2 [&>*]:border-[0.5px] [&>*]:rounded-2xl rounded-2xl max-h-[45px] items-stretch max-w-[800px] select-none">
+        <form action={signUp} className="flex mx-auto grow border-neutral-200 [&>*]:p-2  [&>*]:rounded-2xl rounded-2xl max-h-[45px] items-stretch max-w-[800px] select-none">
 
           <input type="text"
             name='ingredient'
             aria-label="add ingredients"
             placeholder="e.g garri..."
-            className=" placeholder-neutral-200 mx-2 flex-1 focus:shadow-inner focus:border-[1px] transition-all duration-200 border-neutral-300 bg-neutral-50 text-[12px] sm:text-[16px]"
+            className=" placeholder-neutral-200 mx-2 flex-1 focus:shadow-inner shadow-neutral-200 outline-2 outline-neutral-300 transition-all duration-200 bg-neutral-50 text-[12px] sm:text-[16px]"
           />
 
           <Button type="submit">Add Ingredient</Button>

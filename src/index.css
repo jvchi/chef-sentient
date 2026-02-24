@@ -3,13 +3,14 @@
 @import "tailwindcss";
 
 
-@layer base{
-  *{
-    @apply text-neutral-900 w-full 
-
+@layer base {
+  * {
+    @apply text-neutral-900;
   }
-  body{
-    @apply min-h-screen bg-neutral-100 font-[inter] 
+
+  html,
+  body {
+    @apply min-h-screen bg-neutral-100 font-[inter] overscroll-none;
   }
 
   input,
