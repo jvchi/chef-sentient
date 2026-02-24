@@ -24,21 +24,29 @@
 }
 
 .recipe-markdown h1 {
-  @apply text-2xl font-bold mt-8 mb-4;
+  @apply text-[18px] sm:text-[24px] font-semibold mt-6 mb-4;
 }
 
 .recipe-markdown h2 {
-  @apply text-xl font-semibold mt-6 mb-3 border-b border-neutral-200 pb-2;
+  @apply text-[16px] sm:text-[20px] font-medium mt-6 mb-3 border-b border-neutral-200 pb-2;
+}
+
+.recipe-markdown h3 {
+  @apply text-[14px] sm:text-[18px] font-semibold mt-4 mb-2;
 }
 
 .recipe-markdown p {
-  @apply mb-4 leading-relaxed text-neutral-700;
+  @apply text-[14px] sm:text-[16px] font-light leading-relaxed text-[#475467] mb-4;
 }
 
 .recipe-markdown ul {
-  @apply list-disc pl-6 mb-6 space-y-2;
+  @apply list-disc pl-5 mb-5 space-y-1;
+}
+
+.recipe-markdown ol {
+  @apply list-decimal pl-5 mb-5 space-y-1;
 }
 
 .recipe-markdown li {
-  @apply text-neutral-600;
+  @apply text-[14px] sm:text-[16px] font-light text-[#475467];
 }
