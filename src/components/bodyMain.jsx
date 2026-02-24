@@ -11,6 +11,7 @@ export default function Main() {
   const [isIngredients, setIsIngredient] = useState([])
   const [recipeShown, setShowRecipe] = useState(false);
   const [recipe, setRecipe] = useState('')
+  const [isActive, setIsActive] = useState(false)
 
   async function showRecipe() {
     setRecipe('')
@@ -36,14 +37,20 @@ export default function Main() {
 
   function signUp(formData) {
     const newIngredient = formData.get('ingredient')
-    { newIngredient.length && setIsIngredient(prevIngredients => [...prevIngredients, newIngredient]) }
+    if (newIngredient && newIngredient.trim().length > 0) {
+      setIsIngredient(prevIngredients => [...prevIngredients, newIngredient.trim()]);
+    }
   }
 
 
   return (
     <>
       <main className="pt-14 sm:pt-24">
-        <form action={signUp} className=" flex mx-auto grow border-neutral-200 [&>*]:p-2  [&>*]:rounded-full rounded-full min-h-[38px] items-stretch max-w-[800px] select-none">
+        <form
+          onFocus={() => setIsActive(true)}
+          action={signUp}
+          className={`flex mx-auto grow border-neutral-200 [&>*]:p-2 [&>*]:rounded-full rounded-full min-h-[38px] items-stretch max-w-[800px] select-none transition-all duration-700 ease-in-out ${isActive || isIngredients.length > 0 ? 'translate-y-0' : 'translate-y-64 sm:translate-y-80'}`}
+        >
 
           <input type="text"
             name='ingredient'
