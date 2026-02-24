@@ -8,17 +8,17 @@ import { getRecipeFromMistral } from '../ai'
 
 export default function Main() {
 
-  const [isIngredients, setIsIngredient] = useState(['beans', 'rice', 'spices', 'indomie'])
+  const [isIngredients, setIsIngredient] = useState([])
   const [recipeShown, setShowRecipe] = useState(false);
   const [recipe, setRecipe] = useState('')
 
   async function showRecipe() {
     console.log('loading recipe...')
-    
+
     const generatedRecipe = await getRecipeFromMistral(isIngredients)
     setShowRecipe(true)
     setRecipe(generatedRecipe)
-    
+
     console.log(generatedRecipe)
   }
 
@@ -30,7 +30,7 @@ export default function Main() {
 
   return (
     <>
-      <main className="pt-24 px-4">
+      <main className="pt-14 sm:pt-24">
         <form action={signUp} className="flex mx-auto grow border-neutral-200 [&>*]:p-2 [&>*]:border-[0.5px] [&>*]:rounded-2xl rounded-2xl max-h-[45px] items-stretch max-w-[800px] select-none">
 
           <input type="text"
@@ -45,7 +45,7 @@ export default function Main() {
       </main>
 
       {isIngredients.length ? <IngredientsList isIngredients={isIngredients} showRecipe={showRecipe} /> : null}
-      {recipeShown && <Recipe  recipe={recipe}/> }
+      {recipeShown && <Recipe recipe={recipe} />}
     </>
   )
 }
