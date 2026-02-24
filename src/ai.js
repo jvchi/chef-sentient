@@ -18,24 +18,41 @@ export async function getRecipeFromMistral(ingredientsArr) {
   return {
     async *[Symbol.asyncIterator]() {
       let buffer = '';
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n\n');
-        buffer = lines.pop(); // Keep the last partial line in the buffer
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n\n');
+          buffer = lines.pop() || ''; // Keep the last partial line
 
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              yield data;
-            } catch (e) {
-              console.error('Error parsing SSE data:', e);
+          for (const line of lines) {
+            if (line.trim().startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.trim().slice(6));
+                yield data;
+              } catch (e) {
+                console.warn('Skipping malformed chunk:', line);
+              }
             }
           }
         }
+
+        // Final flush of any remains in the buffer
+        if (buffer.trim().startsWith('data: ')) {
+          try {
+            const data = JSON.parse(buffer.trim().slice(6));
+            yield data;
+          } catch (e) {
+            // Ignore final partial/malformed data
+          }
+        }
+      } catch (error) {
+        console.error('Stream read error:', error);
+        throw error; // Let the caller (bodyMain.jsx) handle it
+      } finally {
+        reader.releaseLock();
       }
     }
   };

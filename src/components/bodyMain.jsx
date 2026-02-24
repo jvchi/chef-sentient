@@ -15,19 +15,22 @@ export default function Main() {
   async function showRecipe() {
     setRecipe('')
     setShowRecipe(true);
-    console.log('loading recipe...')
+    let hasStartedStreaming = false;
 
     try {
       const stream = await getRecipeFromMistral(isIngredients)
       for await (const chunk of stream) {
         if (chunk.choices && chunk.choices[0].delta.content) {
+          hasStartedStreaming = true;
           const newText = chunk.choices[0].delta.content
           setRecipe(prev => prev + newText)
         }
       }
     } catch (err) {
-      console.error(err)
-        ("Sorry, Chef Jed is currently cooking. Please try again later.")
+      console.error(err);
+      if (!hasStartedStreaming) {
+        setRecipe("Sorry, Chef Jed is currently cooking. Please try again later.");
+      }
     }
   }
 
