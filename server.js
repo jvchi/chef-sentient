@@ -29,7 +29,7 @@ app.post('/api/recipe', async (req, res) => {
 
     // Use streaming for better UX
     const stream = hf.chatCompletionStream({
-      model: "mistralai/Mistral-7B-Instruct-v0.2",
+      model: "Qwen/Qwen2.5-72B-Instruct",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: `I have ${ingredientsString}. Please give me a recipe you'd recommend I make!` },

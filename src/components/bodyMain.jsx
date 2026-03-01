@@ -71,7 +71,7 @@ export default function Main() {
       </main>
 
       {isIngredients.length ? <IngredientsList isIngredients={isIngredients} showRecipe={showRecipe} recipeStatus={recipeStatus} /> : null}
-      {recipeShown && <Recipe recipe={recipe} />}
+      {recipeShown && <Recipe recipe={recipe} recipeStatus={recipeStatus} />}
     </>
   )
 }
