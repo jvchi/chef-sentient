@@ -52,7 +52,7 @@ export default function Main() {
 
   return (
     <>
-      <main className='pt-14 sm:pt-24'>
+      <main className='pt-14 sm:pt-24 mt-8 sm:mt-0'>
         <form
           onFocus={() => setIsActive(true)}
           action={signUp}
