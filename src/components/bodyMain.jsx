@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Button from './Button'
 import Recipe from './Recipe'
 import IngredientsList from './ingredientsList'
@@ -13,6 +13,7 @@ export default function Main() {
   const [recipe, setRecipe] = useState('')
   const [isActive, setIsActive] = useState(false)
   const [recipeStatus, setRecipeStatus] = useState('idle')
+  const recipeSection = useRef(null)
 
   async function showRecipe() {
     setRecipe('')
@@ -36,7 +37,6 @@ export default function Main() {
         setRecipe("Sorry, Chef Jed is currently cooking. Please try again later.");
         setRecipeStatus('idle');
       } else {
-        // We got content, so mark as done even if stream errored at the end
         setRecipeStatus('done');
       }
     }
@@ -48,6 +48,12 @@ export default function Main() {
       setIsIngredient(prevIngredients => [...prevIngredients, newIngredient.trim()]);
     }
   }
+
+  useEffect(()=>{
+    if(recipe && recipeSection.current){
+      recipeSection.current.scrollIntoView()
+    }
+  }, [recipe])
 
 
   return (
@@ -70,7 +76,7 @@ export default function Main() {
         </form>
       </main>
 
-      {isIngredients.length ? <IngredientsList isIngredients={isIngredients} showRecipe={showRecipe} recipeStatus={recipeStatus} /> : null}
+      {isIngredients.length ? <IngredientsList ref={recipeSection} isIngredients={isIngredients} showRecipe={showRecipe} recipeStatus={recipeStatus} /> : null}
       {recipeShown && <Recipe recipe={recipe} recipeStatus={recipeStatus} />}
     </>
   )

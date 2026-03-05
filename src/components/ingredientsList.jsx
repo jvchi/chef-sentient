@@ -1,6 +1,7 @@
 import Button from "./Button"
 
 export default function ingredientsList(props) {
+  
   const { recipeStatus } = props;
 
   const list = props.isIngredients.map((ingredient) => {
@@ -18,11 +19,17 @@ export default function ingredientsList(props) {
         {list}
       </ul>
 
-      {props.isIngredients.length >= 4 && <div className='flex flew-row justify-center items-center bg-[#F0EFEB] h-[80px] sm:h-[100px] max-w-[800px] my-8 px-8'>
-        <div className='w-full h-[52px] flex flex-col justify-center'>
+      {props.isIngredients.length >= 4 && <div 
+      className='flex flew-row justify-center items-center bg-[#F0EFEB] h-[80px] sm:h-[100px] max-w-[800px] my-8 px-8'>
+        <div 
+        ref={props.ref}
+        className='w-full h-[52px] flex flex-col justify-center use'>
+
           <h4 className='text-[13px] sm:text-[16px] font-medium'>Ready for a recipe?</h4>
           <p className='text-[8px] sm:text-[12px] font-light text-[#6B7280]'>Generate a recipe from your list of ingredients.</p>
+
         </div>
+        
         <Button
           variant={buttonVariant}
           onClick={props.showRecipe}
