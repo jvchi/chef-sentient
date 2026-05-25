@@ -22,7 +22,7 @@ export default function Recipe({ recipe, recipeStatus }) {
       </div>
 
       <div className="flex-1 min-w-0 pt-0.5">
-        <div className="font-serif text-[22px] leading-none text-neutral-900 mb-3 italic tracking-tight">
+        <div className="text-[12px] font-medium text-neutral-500 mb-1.5">
           {isLoading && !isStreaming ? (
             <span className="animate-shimmer">Thinking…</span>
           ) : (

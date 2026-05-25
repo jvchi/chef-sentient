@@ -3,8 +3,6 @@
 @theme {
   --font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont,
     "Nunito", system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Instrument Serif", "Iowan Old Style", "Apple Garamond",
-    Georgia, "Times New Roman", serif;
 }
 
 @layer base {
