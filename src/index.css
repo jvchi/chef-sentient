@@ -14,8 +14,6 @@
 
   html,
   body {
-    scrollbar-width: thin;
-    scrollbar-color: transparent;
     font-family: var(--font-rounded);
     background: #ffffff;
     color: #0a0a0a;
@@ -23,16 +21,29 @@
     letter-spacing: -0.015em;
   }
 
-  /* scrollbar width */
+  /* Thin, minimal scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+  }
 
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
 
-/* background/track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-::-webkit-scrollbar-track {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 9999px;
+  }
 
-  background: transparent;
-
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.32);
+  }
 
   ::selection {
     background: #0a0a0a;

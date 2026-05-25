@@ -158,7 +158,7 @@ export default function Main() {
   const canCook = ingredients.length >= 4
 
   return (
-    <div className="flex-1 flex flex-col w-full pt-14">
+    <div className="flex-1 flex flex-col w-full pt-14 min-h-0">
       {/* Floating new-chat button (only when there's something to clear) */}
       <AnimatePresence>
         {(turns.length > 0 || ingredients.length > 0) && (
@@ -168,7 +168,7 @@ export default function Main() {
             exit={{ opacity: 0, scale: 0.9 }}
             transition={spring}
             onClick={newChat}
-            className="fixed top-3 right-4 sm:right-6 z-50 inline-flex items-center gap-1
+            className="fixed top-3 right-3 sm:right-6 z-[60] inline-flex items-center gap-1
                        h-8 pl-2.5 pr-3 rounded-full
                        bg-white border border-neutral-200
                        shadow-[0_1px_2px_rgba(0,0,0,0.04)]
@@ -183,8 +183,8 @@ export default function Main() {
       </AnimatePresence>
 
       {/* Scrollable conversation area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto">
-        <div className="w-full max-w-[680px] mx-auto px-5 sm:px-8 py-8">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-8 py-6 sm:py-8">
           {isEmpty ? (
             <EmptyState />
           ) : (
@@ -210,8 +210,11 @@ export default function Main() {
       </div>
 
       {/* Pinned composer */}
-      <div className="sticky bottom-0 bg-gradient-to-t from-white via-white to-white/0 pb-5 pt-6">
-        <div className="w-full max-w-[680px] mx-auto px-5 sm:px-8">
+      <div
+        className="sticky bottom-0 bg-gradient-to-t from-white via-white to-white/0 pt-6"
+        style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}
+      >
+        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-8">
           <motion.form
             initial={{ y: 12, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -240,7 +243,7 @@ export default function Main() {
                   ? 'Add more, or tap to cook'
                   : `Add ${4 - ingredients.length} more to cook`
               }
-              className="flex-1 text-[15px] py-2 placeholder:text-neutral-400 text-neutral-900 disabled:text-neutral-400"
+              className="flex-1 min-w-0 text-[16px] sm:text-[15px] py-2 placeholder:text-neutral-400 text-neutral-900 disabled:text-neutral-400"
             />
 
             {/* Stop button while streaming */}
@@ -318,7 +321,7 @@ function EmptyState() {
       <h1 className="text-[28px] sm:text-[36px] font-semibold tracking-tight text-neutral-900 leading-[1.1]">
         What's in your kitchen?
       </h1>
-      <p className="mt-3 text-[15px] text-neutral-500 max-w-[420px]">
+      <p className="mt-3 text-[15px] text-neutral-500 max-w-[280px] sm:max-w-[420px] text-balance">
         Add a few ingredients you have on hand and Chef JED will suggest a recipe.
       </p>
     </motion.div>
