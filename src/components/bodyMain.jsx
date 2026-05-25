@@ -176,11 +176,8 @@ export default function Main() {
   return (
     <div className="flex-1 flex flex-col w-full pt-14 min-h-0">
       {/* Floating top-right controls */}
-      <div className="fixed top-3 right-3 sm:right-6 z-[60] flex items-center gap-2">
-        <HistoryButton
-          count={history.items.length}
-          onClick={() => setHistoryOpen(true)}
-        />
+      <div className="fixed top-3 right-4 sm:right-6 z-[60] flex items-center gap-2">
+        <HistoryButton onClick={() => setHistoryOpen(true)} />
         <AnimatePresence>
           {(turns.length > 0 || ingredients.length > 0) && (
             <motion.button
@@ -192,10 +189,10 @@ export default function Main() {
               onClick={newChat}
               className="inline-flex items-center gap-1
                          h-8 pl-2.5 pr-3 rounded-full
-                         bg-white border border-neutral-200
-                         shadow-[0_1px_2px_rgba(0,0,0,0.04)]
+                         bg-white/80 backdrop-blur-md
+                         ring-1 ring-inset ring-neutral-200/80
                          text-[12px] font-medium text-neutral-700
-                         hover:bg-neutral-50 cursor-pointer"
+                         hover:bg-white cursor-pointer"
               aria-label="new chat"
             >
               <HugeiconsIcon icon={PlusSignIcon} size={13} strokeWidth={2.2} />
@@ -211,6 +208,17 @@ export default function Main() {
         onClose={() => setHistoryOpen(false)}
         onRemove={history.remove}
         onClear={history.clear}
+        onOpenEntry={(entry) => {
+          abortRef.current?.abort()
+          setIngredients([])
+          setDraft('')
+          setTurns([{
+            id: entry.id,
+            ingredients: entry.ingredients || [],
+            recipe: entry.recipe,
+            status: 'done',
+          }])
+        }}
       />
 
       {/* Scrollable conversation area */}

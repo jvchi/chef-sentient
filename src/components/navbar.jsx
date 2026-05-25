@@ -10,7 +10,7 @@ export default function Navbar() {
       initial={{ y: -16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={spring}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center h-14
+      className="fixed top-0 left-0 right-0 z-50 flex items-center h-14 px-4 sm:px-6
                  bg-white/85 backdrop-blur-xl border-b border-neutral-200/70 select-none"
     >
       <div className="flex items-center gap-2">
