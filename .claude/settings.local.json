@@ -5,7 +5,8 @@
       "Bash(npm run *)",
       "Bash(node -e \"import\\('@hugeicons/core-free-icons'\\).then\\(m => console.log\\(Object.keys\\(m\\).filter\\(k => /Chef|Sparkle|Restaurant|Add01|Cancel01|Arrow|Check/.test\\(k\\)\\).slice\\(0,40\\)\\)\\)\")",
       "Bash(node -e \"import\\('@hugeicons/core-free-icons'\\).then\\(m => { const keys = Object.keys\\(m\\); ['ChefHatIcon','Add01Icon','Cancel01Icon','SparklesIcon','CheckmarkCircle02Icon','ArrowRight02Icon','Restaurant02Icon'].forEach\\(k => console.log\\(k, keys.includes\\(k\\)\\)\\) }\\)\")",
-      "WebSearch"
+      "WebSearch",
+      "Bash(npx vite *)"
     ]
   }
 }

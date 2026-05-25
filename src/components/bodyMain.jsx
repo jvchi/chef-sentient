@@ -10,6 +10,7 @@ import {
 } from '@hugeicons/core-free-icons'
 import Recipe from './Recipe'
 import { getRecipeFromMistral } from '../ai'
+import { useHistory, HistoryButton, HistorySheet } from './History'
 
 const spring = { type: 'spring', stiffness: 280, damping: 26 }
 const layoutSpring = { type: 'spring', stiffness: 700, damping: 40, mass: 0.4 }
@@ -36,6 +37,9 @@ export default function Main() {
   const bottomRef = useRef(null)
   const abortRef = useRef(null)
 
+  const history = useHistory()
+  const [historyOpen, setHistoryOpen] = useState(false)
+
   const activeTurn = turns[turns.length - 1]
   const isStreaming = activeTurn?.status === 'loading'
 
@@ -54,6 +58,7 @@ export default function Main() {
     const controller = new AbortController()
     abortRef.current = controller
     let started = false
+    let accumulated = ''
 
     try {
       const stream = await getRecipeFromMistral(snapshot, controller.signal)
@@ -62,23 +67,27 @@ export default function Main() {
         if (chunk.choices && chunk.choices[0].delta.content) {
           started = true
           const piece = chunk.choices[0].delta.content
+          accumulated += piece
           setTurns(prev =>
             prev.map(t => (t.id === id ? { ...t, recipe: t.recipe + piece } : t))
           )
         }
       }
+      const aborted = controller.signal.aborted
       setTurns(prev =>
-        prev.map(t =>
-          t.id === id
-            ? { ...t, status: controller.signal.aborted ? 'stopped' : 'done' }
-            : t
-        )
+        prev.map(t => (t.id === id ? { ...t, status: aborted ? 'stopped' : 'done' } : t))
       )
+      if (!aborted && accumulated.trim().length > 0) {
+        history.add({ ingredients: snapshot, recipe: accumulated })
+      }
     } catch (err) {
       if (err.name === 'AbortError') {
         setTurns(prev =>
           prev.map(t => (t.id === id ? { ...t, status: 'stopped' } : t))
         )
+        if (accumulated.trim().length > 40) {
+          history.add({ ingredients: snapshot, recipe: accumulated })
+        }
       } else {
         console.error(err)
         setTurns(prev =>
@@ -106,6 +115,13 @@ export default function Main() {
 
   function newChat() {
     abortRef.current?.abort()
+    // Save any turn that has real recipe content before clearing.
+    // `history.add` dedupes by recipe text, so re-saving completed turns is safe.
+    for (const t of turns) {
+      if (t.recipe && t.recipe.trim().length > 40) {
+        history.add({ ingredients: t.ingredients, recipe: t.recipe })
+      }
+    }
     setTurns([])
     setIngredients([])
     setDraft('')
@@ -159,28 +175,43 @@ export default function Main() {
 
   return (
     <div className="flex-1 flex flex-col w-full pt-14 min-h-0">
-      {/* Floating new-chat button (only when there's something to clear) */}
-      <AnimatePresence>
-        {(turns.length > 0 || ingredients.length > 0) && (
-          <motion.button
-            initial={{ opacity: 0, y: -4, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={spring}
-            onClick={newChat}
-            className="fixed top-3 right-3 sm:right-6 z-[60] inline-flex items-center gap-1
-                       h-8 pl-2.5 pr-3 rounded-full
-                       bg-white border border-neutral-200
-                       shadow-[0_1px_2px_rgba(0,0,0,0.04)]
-                       text-[12px] font-medium text-neutral-700
-                       hover:bg-neutral-50 cursor-pointer"
-            aria-label="new chat"
-          >
-            <HugeiconsIcon icon={PlusSignIcon} size={13} strokeWidth={2.2} />
-            New
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Floating top-right controls */}
+      <div className="fixed top-3 right-3 sm:right-6 z-[60] flex items-center gap-2">
+        <HistoryButton
+          count={history.items.length}
+          onClick={() => setHistoryOpen(true)}
+        />
+        <AnimatePresence>
+          {(turns.length > 0 || ingredients.length > 0) && (
+            <motion.button
+              key="new-btn"
+              initial={{ opacity: 0, y: -4, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={spring}
+              onClick={newChat}
+              className="inline-flex items-center gap-1
+                         h-8 pl-2.5 pr-3 rounded-full
+                         bg-white border border-neutral-200
+                         shadow-[0_1px_2px_rgba(0,0,0,0.04)]
+                         text-[12px] font-medium text-neutral-700
+                         hover:bg-neutral-50 cursor-pointer"
+              aria-label="new chat"
+            >
+              <HugeiconsIcon icon={PlusSignIcon} size={13} strokeWidth={2.2} />
+              New
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <HistorySheet
+        open={historyOpen}
+        items={history.items}
+        onClose={() => setHistoryOpen(false)}
+        onRemove={history.remove}
+        onClear={history.clear}
+      />
 
       {/* Scrollable conversation area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain">
@@ -341,12 +372,9 @@ function IngredientBubble({ ingredients, onRemove, readOnly = false }) {
         layout
         transition={layoutSpring}
         className="max-w-[85%] rounded-2xl rounded-tr-md
-                   bg-neutral-100 px-4 py-3"
+                   bg-neutral-100 px-3 py-3"
       >
-        <motion.div layout="position" transition={layoutSpring} className="text-[12px] font-medium text-neutral-500 mb-2">
-          Ingredients · {ingredients.length}
-        </motion.div>
-        <motion.ul layout transition={layoutSpring} className="flex flex-wrap gap-1.5">
+        <motion.ul layout transition={layoutSpring} className="flex flex-col items-end gap-1.5">
           <AnimatePresence initial={false} mode="popLayout">
             {ingredients.map(item => (
               <motion.li
