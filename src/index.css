@@ -1,16 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
 @import "tailwindcss";
 
+@theme {
+  --font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont,
+    "Nunito", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Instrument Serif", "Iowan Old Style", "Apple Garamond",
+    Georgia, "Times New Roman", serif;
+}
 
 @layer base {
   * {
-    @apply text-neutral-900;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   html,
   body {
-    @apply min-h-screen bg-neutral-100 font-[inter] overscroll-none;
+    scrollbar-width: thin;
+    scrollbar-color: transparent;
+    font-family: var(--font-rounded);
+    background: #ffffff;
+    color: #0a0a0a;
+    @apply min-h-screen overscroll-none;
+    letter-spacing: -0.015em;
+  }
+
+  /* scrollbar width */
+
+
+/* background/track */
+
+::-webkit-scrollbar-track {
+
+  background: transparent;
+
+}
+
+  ::selection {
+    background: #0a0a0a;
+    color: #ffffff;
   }
 
   input,
@@ -21,114 +49,112 @@
     font: inherit;
     color: inherit;
   }
+
+  button {
+    font-family: inherit;
+  }
+}
+
+/* ---------- Recipe markdown ---------- */
+.recipe-markdown {
+  @apply text-[14px] leading-[1.6] text-neutral-600;
 }
 
 .recipe-markdown h1 {
-  @apply text-[18px] sm:text-[24px] font-semibold mt-6 mb-4;
+  @apply text-[18px] sm:text-[20px] font-semibold mt-5 mb-2 tracking-tight text-neutral-900;
 }
 
 .recipe-markdown h2 {
-  @apply text-[16px] sm:text-[20px] font-medium mt-6 mb-3 border-b border-neutral-200 pb-2;
+  @apply text-[15px] sm:text-[16px] font-semibold mt-6 mb-2 tracking-tight text-neutral-800;
 }
 
 .recipe-markdown h3 {
-  @apply text-[14px] sm:text-[18px] font-semibold mt-4 mb-2;
+  @apply text-[13px] sm:text-[14px] font-semibold mt-4 mb-1.5 text-neutral-700 uppercase tracking-wider;
 }
 
 .recipe-markdown p {
-  @apply text-[14px] sm:text-[16px] font-light leading-relaxed text-[#475467] mb-4;
+  @apply text-[14px] font-normal leading-[1.6] text-neutral-600 mb-3;
 }
 
 .recipe-markdown ul {
-  @apply list-disc pl-5 mb-5 space-y-1;
+  @apply mb-4 space-y-1 pl-1;
 }
 
 .recipe-markdown ol {
-  @apply list-decimal pl-5 mb-5 space-y-1;
+  @apply mb-4 space-y-1 pl-5 list-decimal marker:text-neutral-400;
 }
 
-.recipe-markdown li {
-  @apply text-[14px] sm:text-[16px] font-light text-[#475467];
+.recipe-markdown ul li {
+  @apply text-[14px] font-normal text-neutral-600 pl-4 relative leading-[1.55];
 }
 
-/* Recipe button — fixed size across all states */
-.recipe-btn {
-  width: 80px !important;
-  min-width: 80px !important;
-  max-width: 80px !important;
-  height: 30px !important;
-  max-height: 30px !important;
-  min-height: 30px !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.4s ease;
-}
-
-.recipe-btn-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.recipe-btn-state {
+.recipe-markdown ul li::before {
+  content: "";
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-  white-space: nowrap;
+  left: 4px;
+  top: 0.72em;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: #a3a3a3;
 }
 
-.recipe-btn-state.active {
-  opacity: 1;
-  transform: scale(1);
-  pointer-events: auto;
+.recipe-markdown ol li {
+  @apply text-[14px] font-normal text-neutral-600 leading-[1.55] pl-1;
 }
 
-.recipe-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: pixel-spin 0.6s steps(8) infinite;
+.recipe-markdown strong {
+  @apply font-semibold text-neutral-800;
 }
 
-@keyframes pixel-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.recipe-markdown em {
+  @apply italic text-neutral-500;
 }
 
+.recipe-markdown code {
+  @apply text-[13px] px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700 font-medium;
+}
+
+.recipe-markdown hr {
+  @apply my-5 border-neutral-200;
+}
+
+.recipe-markdown a {
+  @apply text-neutral-800 underline decoration-neutral-300 underline-offset-2;
+}
+
+.recipe-markdown > *:first-child {
+  @apply mt-0;
+}
+
+/* ---------- Shimmer for loading title ---------- */
 @keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-
-  100% {
-    background-position: 200% center;
-  }
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg,
-      #171717 25%,
-      #a3a3a3 50%,
-      #171717 75%);
+  background: linear-gradient(90deg, #a3a3a3 0%, #0a0a0a 50%, #a3a3a3 100%);
   background-size: 200% auto;
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: shimmer 3s linear reverse infinite;
+  animation: shimmer 2.4s linear infinite;
+}
+
+/* ---------- Streaming caret ---------- */
+@keyframes caret-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.stream-caret {
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: #0a0a0a;
+  border-radius: 1.5px;
+  animation: caret-pulse 1s ease-in-out infinite;
 }

@@ -1,56 +1,150 @@
-import Button from "./Button"
+import { forwardRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { HugeiconsIcon } from '@hugeicons/react'
+import {
+  MultiplicationSignIcon,
+  ArrowRight02Icon,
+  Tick02Icon,
+} from '@hugeicons/core-free-icons'
 
-export default function ingredientsList(props) {
-  
-  const { recipeStatus } = props;
+const spring = { type: 'spring', stiffness: 360, damping: 28 }
 
-  const list = props.isIngredients.map((ingredient) => {
-    return <li key={ingredient} className='text-[14px] sm:text-[16px] font-light list-disc mx-8 text-[#475467]'>{ingredient}</li>
-  })
-
-  const buttonVariant = recipeStatus === 'done' ? 'success' : 'secondary';
+const IngredientsList = forwardRef(function IngredientsList(
+  { ingredients, removeIngredient, showRecipe, recipeStatus },
+  ref
+) {
+  const canCook = ingredients.length >= 4
 
   return (
+    <motion.section
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={spring}
+      className="max-w-[580px] mx-auto mt-10"
+    >
+      <div className="flex items-baseline justify-between mb-3 px-1">
+        <h2 className="text-[13px] font-medium text-neutral-500 tracking-tight">
+          Ingredients
+        </h2>
+        <span className="text-[12px] text-neutral-400 tabular-nums">
+          {ingredients.length}
+        </span>
+      </div>
 
-    <section className=' max-w-[800px] flex flex-col justify-around mx-auto  grow h-max'>
-      <h1 className='text-[14px] text-neutral-600 font-medium my-4 sm:text-[18px] px-4 sm:px-2'>Ingredients on hand:</h1>
-
-      <ul className="">
-        {list}
+      <ul className="flex flex-wrap gap-2">
+        <AnimatePresence initial={false}>
+          {ingredients.map(item => (
+            <motion.li
+              key={item}
+              layout
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={spring}
+              className="group inline-flex items-center gap-1 pl-3 pr-1 py-1
+                         rounded-full bg-neutral-100
+                         text-[14px] font-medium text-neutral-900"
+            >
+              <span className="capitalize">{item}</span>
+              <button
+                onClick={() => removeIngredient(item)}
+                aria-label={`remove ${item}`}
+                className="grid place-items-center w-6 h-6 rounded-full
+                           text-neutral-400 hover:text-neutral-900 hover:bg-neutral-200
+                           cursor-pointer transition-colors"
+              >
+                <HugeiconsIcon icon={MultiplicationSignIcon} size={14} strokeWidth={2.2} />
+              </button>
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
 
-      {props.isIngredients.length >= 4 && <div 
-      className='flex flew-row justify-center items-center bg-[#F0EFEB] h-[80px] sm:h-[100px] max-w-[800px] my-8 px-8'>
-        <div 
-        ref={props.ref}
-        className='w-full h-[52px] flex flex-col justify-center use'>
+      <AnimatePresence>
+        {canCook && (
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={spring}
+            className="flex items-center justify-between gap-4 mt-8
+                       rounded-2xl border border-neutral-200 bg-white
+                       shadow-[0_1px_2px_rgba(0,0,0,0.04)]
+                       px-5 py-4"
+          >
+            <div className="min-w-0">
+              <h3 className="text-[15px] font-semibold tracking-tight text-neutral-900">
+                Ready for a recipe?
+              </h3>
+              <p className="text-[13px] text-neutral-500 mt-0.5 truncate">
+                Generate one from your {ingredients.length} ingredients.
+              </p>
+            </div>
+            <CookButton onClick={showRecipe} status={recipeStatus} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.section>
+  )
+})
 
-          <h4 className='text-[13px] sm:text-[16px] font-medium'>Ready for a recipe?</h4>
-          <p className='text-[8px] sm:text-[12px] font-light text-[#6B7280]'>Generate a recipe from your list of ingredients.</p>
+export default IngredientsList
 
-        </div>
-        
-        <Button
-          variant={buttonVariant}
-          onClick={props.showRecipe}
-          disabled={recipeStatus === 'loading'}
-          className="recipe-btn"
-        >
-          <span className="recipe-btn-inner ">
-            <span className={`recipe-btn-state ${recipeStatus === 'idle' ? 'active' : ''} text-neutral-50`}>
-              Get a recipe
-            </span>
-            <span className={`recipe-btn-state ${recipeStatus === 'loading' ? 'active' : ''}`}>
-              <span className="recipe-spinner"></span>
-            </span>
-            <span className={`recipe-btn-state ${recipeStatus === 'done' ? 'active' : ''}`}>
-              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7.5L5.5 11L12 3" stroke="#86EFAC" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-          </span>
-        </Button>
-      </div>}
-    </section>
+function CookButton({ onClick, status }) {
+  const disabled = status === 'loading'
+  return (
+    <motion.button
+      onClick={onClick}
+      disabled={disabled}
+      whileTap={!disabled ? { scale: 0.94 } : {}}
+      transition={{ type: 'spring', stiffness: 500, damping: 22 }}
+      className="relative shrink-0 inline-flex items-center justify-center gap-1.5
+                 h-9 px-4 rounded-full
+                 bg-neutral-900 text-white text-[13px] font-medium tracking-tight
+                 disabled:opacity-80 cursor-pointer min-w-[110px]"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {status === 'idle' && (
+          <motion.span
+            key="idle"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="inline-flex items-center gap-1.5"
+          >
+            Generate
+            <HugeiconsIcon icon={ArrowRight02Icon} size={14} strokeWidth={2.4} />
+          </motion.span>
+        )}
+        {status === 'loading' && (
+          <motion.span
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="inline-flex items-center gap-2"
+          >
+            <span className="block w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+            Cooking
+          </motion.span>
+        )}
+        {status === 'done' && (
+          <motion.span
+            key="done"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="inline-flex items-center gap-1.5"
+          >
+            <HugeiconsIcon icon={Tick02Icon} size={14} strokeWidth={2.6} />
+            Done
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.button>
   )
 }

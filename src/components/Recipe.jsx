@@ -1,19 +1,63 @@
-import React from 'react'
-import ReactMarkdown from 'https://esm.sh/react-markdown@7'
+import { motion } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { ChefHatIcon } from '@hugeicons/core-free-icons'
 
-export default function Recipe(props) {
+const spring = { type: 'spring', stiffness: 240, damping: 26 }
+
+export default function Recipe({ recipe, recipeStatus }) {
+  const isLoading = recipeStatus === 'loading'
+  const isStreaming = isLoading && recipe.length > 0
+
   return (
-    <section className='px-6 sm:px-8  max-w-[800px] mx-auto mb-40 mb-'>
-      <h2 className='relative text-[14px] font-medium mb-4 sm:text-[16px] inline-block'>
-        <span className='text-neutral-900'>Chef Jed Recommends:</span>
-        <span className={`absolute inset-0 animate-shimmer pointer-events-none transition-opacity duration-1000 ease-out ${props.recipeStatus === 'loading' ? 'opacity-100' : 'opacity-0'}`}>
-          Chef Jed Recommends:
-        </span>
-      </h2>
-      <ReactMarkdown className='recipe-markdown' aria-live='polite'>
-        {props.recipe}
-      </ReactMarkdown>
-    </section>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 4 }}
+      transition={spring}
+      className="flex gap-3"
+    >
+      <div className="shrink-0 grid place-items-center w-7 h-7 rounded-full bg-neutral-900 text-white mt-0.5">
+        <HugeiconsIcon icon={ChefHatIcon} size={14} strokeWidth={2} />
+      </div>
 
+      <div className="flex-1 min-w-0 pt-0.5">
+        <div className="font-serif text-[22px] leading-none text-neutral-900 mb-3 italic tracking-tight">
+          {isLoading && !isStreaming ? (
+            <span className="animate-shimmer">Thinking…</span>
+          ) : (
+            'Chef JED'
+          )}
+        </div>
+
+        <div className="recipe-markdown" aria-live="polite">
+          <ReactMarkdown>{recipe}</ReactMarkdown>
+          {isStreaming && <span className="stream-caret" aria-hidden="true" />}
+        </div>
+
+        {isLoading && !isStreaming && <SkeletonLines />}
+
+        {recipeStatus === 'stopped' && (
+          <div className="mt-2 text-[12px] text-neutral-400 italic">Stopped.</div>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+function SkeletonLines() {
+  return (
+    <div className="space-y-2.5 mt-1">
+      {[90, 75, 85, 60].map((w, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0.4 }}
+          animate={{ opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.1 }}
+          className="h-3 rounded-full bg-neutral-100"
+          style={{ width: `${w}%` }}
+        />
+      ))}
+    </div>
   )
 }

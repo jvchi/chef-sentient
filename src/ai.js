@@ -1,10 +1,11 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '' // Empty string for relative path on Vercel
 
-export async function getRecipeFromMistral(ingredientsArr) {
+export async function getRecipeFromMistral(ingredientsArr, signal) {
   const response = await fetch(`${BACKEND_URL}/api/recipe`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ingredients: ingredientsArr })
+    body: JSON.stringify({ ingredients: ingredientsArr }),
+    signal
   });
 
   if (!response.ok) {

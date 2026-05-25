@@ -1,15 +1,29 @@
-import React from 'react'
+import { motion } from 'framer-motion'
 
-export default function Button({ children, variant = 'primary', className = '', ...props }) {
-  const baseStyle = 'text-neutral-50 shadow-[inset_0px_0px_3px_rgba(0,0,0,0.5)] shadow-white w-fit min-w-[90px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-[10px] rounded-2xl min-w-max px-4 py-2 max-h-[45px] cursor-pointer';
+const variants = {
+  primary: 'bg-neutral-900 text-white hover:bg-neutral-800',
+  secondary: 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200',
+  ghost: 'bg-transparent text-neutral-700 hover:bg-neutral-100',
+}
 
-  const variants = {
-    primary: 'bg-neutral-900',
-    secondary: 'bg-orange-900',
-    success: 'bg-green-900'
-  }
-
+export default function Button({
+  children,
+  variant = 'primary',
+  className = '',
+  ...props
+}) {
   return (
-    <button className={`${baseStyle} ${variants[variant] || ""} ${className}`} {...props}>{children}</button>
+    <motion.button
+      whileTap={{ scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 500, damping: 24 }}
+      className={`inline-flex items-center justify-center gap-1.5 rounded-full
+                  px-4 py-2 text-[14px] font-medium tracking-tight
+                  cursor-pointer select-none transition-colors
+                  disabled:opacity-40 disabled:cursor-not-allowed
+                  ${variants[variant] || variants.primary} ${className}`}
+      {...props}
+    >
+      {children}
+    </motion.button>
   )
 }
